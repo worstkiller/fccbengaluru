@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "564479976750",
+    "firebase_url": "https://fcc-bengaluru.firebaseio.com",
+    "project_id": "fcc-bengaluru",
+    "storage_bucket": "fcc-bengaluru.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564479976750:android:abd62c46b0877259",
+        "android_client_info": {
+          "package_name": "com.android.buffer.fccbengaluru"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564479976750-1v1hg9io5fabt60g20bdir5gnleu39pg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.buffer.fccbengaluru",
+            "certificate_hash": "1c92eb38743060127e03322591e32bb73337a36e"
+          }
+        },
+        {
+          "client_id": "564479976750-un1qqohvsnjt2urvfclru3sf3p9rr80q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbUhGNR_thNA-dU0thNhs9UOAk9-DZ8Ts"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564479976750-un1qqohvsnjt2urvfclru3sf3p9rr80q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

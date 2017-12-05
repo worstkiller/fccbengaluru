@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!--splash screen colors-->
+    <color name="splahOverlay">#dc3F51B5</color>
+    <color name="whiteColor">#fff</color>
+    <color name="whiteFrost">#fafafa</color>
+    <color name="blackColor">#212121</color>
+    <color name="greyLight">#757575</color>
+    <color name="whiteOpacity60">#c8ffffff</color>
+</resources>
