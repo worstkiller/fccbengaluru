@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.android.buffer.fccbengaluru.activity.BaseActivity;
+import com.android.buffer.fccbengaluru.activity.LoginActivity;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 
 /**
@@ -54,5 +55,16 @@ public class BaseFragment extends Fragment {
 
     public void showSnackBar(String msg){
         Snackbar.make(mView,msg,Snackbar.LENGTH_SHORT).show();
+    }
+
+    /*
+    change fragment based on code from login acitivty
+     */
+    public void changeFragment(int code){
+        if (isAdded()){
+            if (getActivity() instanceof BaseActivity) {
+                ((LoginActivity)getActivity()).changeFragment(code);
+            }
+        }
     }
 }

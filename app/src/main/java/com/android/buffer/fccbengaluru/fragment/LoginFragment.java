@@ -1,7 +1,7 @@
 package com.android.buffer.fccbengaluru.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -18,11 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
+import com.android.buffer.fccbengaluru.activity.MainActivity;
+import com.android.buffer.fccbengaluru.repository.SharedPreference;
+import com.android.buffer.fccbengaluru.util.Constants;
 import com.android.buffer.fccbengaluru.util.Utils;
 import com.android.buffer.fccbengaluru.util.Validate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +42,7 @@ import butterknife.Unbinder;
 
 public class LoginFragment extends BaseFragment {
 
+    private static final String TAG = LoginFragment.class.getCanonicalName();
     @BindView(R.id.etSplashEmail)
     EditText mEtSplashEmail;
 
@@ -55,6 +63,8 @@ public class LoginFragment extends BaseFragment {
 
     Unbinder unbinder;
 
+    private FirebaseAuth mFirebaseAuth;
+
     /**
      * <p>returns a login fragment</p>
      *
@@ -67,6 +77,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Nullable
@@ -86,7 +97,7 @@ public class LoginFragment extends BaseFragment {
 
     private void setSpannableSignupString() {
         //set a spannable string on sign up line
-        int color = ContextCompat.getColor(getContext(),R.color.colorAccent);
+        int color = ContextCompat.getColor(getActivity(), R.color.colorAccent);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(mTvSplashSignup.getText());
         //color
         stringBuilder.setSpan(new ForegroundColorSpan(color),
@@ -115,7 +126,7 @@ public class LoginFragment extends BaseFragment {
 
     private void openSignUpFragment() {
         //open sign up fragment
-        Toast.makeText(getContext(),"Work under progress",Toast.LENGTH_SHORT).show();
+        changeFragment(Constants.FRAGMENT_SIGN_UP);
     }
 
     private void setTextWatchers() {
@@ -150,7 +161,37 @@ public class LoginFragment extends BaseFragment {
     @OnClick(R.id.btSplashLogin)
     public void onViewClicked() {
         if (validate()) {
-            Toast.makeText(getContext(), "Login successfully", Toast.LENGTH_SHORT).show();
+            makeSigninFireBaseCall(mEtSplashEmail.getText().toString(), mEtSplashPassword.getText().toString());
+        }
+    }
+
+    private void makeSigninFireBaseCall(String email, String password) {
+        //here make call to firebase for signin process
+        showProgressDialog();
+        mFirebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            updateUI(mFirebaseAuth.getCurrentUser());
+                        } else {
+                            updateUI(null);
+                        }
+                    }
+                });
+    }
+
+    private void updateUI(final FirebaseUser user) {
+        hideProgressDialog();
+        if (user != null) {
+            SharedPreference sharedPreference = getSharedPreference();
+            if (sharedPreference != null) {
+                sharedPreference.saveEmailLogin(user.getEmail(), user.getUid());
+                Utils.startIntent(getActivity(), MainActivity.class);
+                getActivity().finish();
+            }
+        } else {
+            showSnackBar(getString(R.string.error_common));
         }
     }
 
@@ -158,10 +199,12 @@ public class LoginFragment extends BaseFragment {
         //validate the user input
         if (!Validate.isValidEmail(mEtSplashEmail)) {
             mTilSplashEmail.setError(getString(R.string.splash_error_email));
+            mEtSplashEmail.requestFocus();
             return false;
         }
         if (!Validate.isValidPassword(mEtSplashPassword)) {
             mTilSplashPassword.setError(getString(R.string.splash_error_password));
+            mEtSplashPassword.requestFocus();
             return false;
         }
         return true;

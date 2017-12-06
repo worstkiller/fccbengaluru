@@ -130,7 +130,7 @@ public class EmailSignupFragment extends BaseFragment {
                     public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (isAdded()) {
                             if (task.isSuccessful()) {
-                                updateUI(task.getResult().getUser());
+                                updateUI(mAuth.getCurrentUser());
                             } else {
                                 updateUI(null);
                             }
@@ -146,7 +146,7 @@ public class EmailSignupFragment extends BaseFragment {
             SharedPreference sharedPreference = getSharedPreference();
             if (sharedPreference != null) {
                 sharedPreference.saveEmailLogin(user.getEmail(), user.getUid());
-                Utils.startIntent(getContext(), MainActivity.class);
+                Utils.startIntent(getActivity(), MainActivity.class);
                 getActivity().finish();
             }
         } else {
@@ -158,10 +158,12 @@ public class EmailSignupFragment extends BaseFragment {
         //validate the user input
         if (!Validate.isValidEmail(mEtEmailInput)) {
             mTilEmailInput.setError(getString(R.string.splash_error_email));
+            mEtEmailInput.requestFocus();
             return false;
         }
         if (!Validate.isValidPassword(mEtEmailPassword)) {
             mTilEmailPassword.setError(getString(R.string.splash_error_password));
+            mEtEmailPassword.requestFocus();
             return false;
         }
         return true;
