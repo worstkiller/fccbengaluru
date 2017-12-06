@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.android.buffer.fccbengaluru.fragment.EmailSignupFragment;
 import com.android.buffer.fccbengaluru.fragment.LoginFragment;
+import com.android.buffer.fccbengaluru.fragment.SignupFragment;
 
 /**
  * Created by incred on 5/12/17.
@@ -12,7 +14,7 @@ import com.android.buffer.fccbengaluru.fragment.LoginFragment;
 
 public class LoginActivity extends BaseActivity {
 
-    public final static int FRAGMENT_LOGIN = 101, FRAGMENT_SIGN_UP = 102, FRAGMENT_FORGOT_PASSWORD = 103;
+    public final static int FRAGMENT_LOGIN = 101, FRAGMENT_SIGN_UP = 102, FRAGMENT_FORGOT_PASSWORD = 103,FRAGMENT_EMAIL_SIGNUP=104;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -32,10 +34,10 @@ public class LoginActivity extends BaseActivity {
                 fragment = LoginFragment.getInstance();
                 break;
             case FRAGMENT_SIGN_UP:
-                fragment = LoginFragment.getInstance();
+                fragment = SignupFragment.getInstance();
                 break;
-            case FRAGMENT_FORGOT_PASSWORD:
-                fragment = LoginFragment.getInstance();
+            case FRAGMENT_EMAIL_SIGNUP:
+                fragment = EmailSignupFragment.getInstance();
                 break;
         }
         addFragment(fragment);

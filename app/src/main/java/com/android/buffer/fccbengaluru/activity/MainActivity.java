@@ -10,8 +10,12 @@ import android.view.MenuItem;
 
 import com.android.buffer.fccbengaluru.R;
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -26,6 +31,14 @@ public class MainActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        //TODO check login
+        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.android.buffer.fccbengaluru.util.Validate;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by incred on 5/12/17.
@@ -52,6 +53,8 @@ public class LoginFragment extends BaseFragment {
     @BindView(R.id.tvSplashSignup)
     TextView mTvSplashSignup;
 
+    Unbinder unbinder;
+
     /**
      * <p>returns a login fragment</p>
      *
@@ -70,7 +73,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -162,5 +165,11 @@ public class LoginFragment extends BaseFragment {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

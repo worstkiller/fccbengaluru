@@ -14,5 +14,9 @@
     <string name="signup_google">Signup with Google</string>
     <string name="signup_facebook">Signup with Facebook</string>
     <string name="signup_already_signin">Already have an account? Signin</string>
+    <string name="email_privacy_policy">By Signing, you agree to our Privacy policy</string>
+    <string name="email_signup">Signup</string>
+    <string name="progress_dialog_msg">Please wait loading request</string>
+    <string name="error_common">Something went wrong, please try again</string>
 
 </resources>

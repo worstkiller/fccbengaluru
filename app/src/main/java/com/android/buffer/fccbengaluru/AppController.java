@@ -13,9 +13,20 @@ import io.fabric.sdk.android.Fabric;
 
 public class AppController extends Application {
 
+    private static AppController appController;
+
+    /**
+     * retuns a Appcontroller instance
+     * @return
+     */
+    public static AppController getAppController(){
+        return appController;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        appController = this;
     }
 }
