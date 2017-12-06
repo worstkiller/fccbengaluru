@@ -1,27 +1,34 @@
 package com.android.buffer.fccbengaluru.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
-import com.crashlytics.android.Crashlytics;
+import com.android.buffer.fccbengaluru.repository.SharedPreference;
+import com.android.buffer.fccbengaluru.util.Utils;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTextView = findViewById(R.id.tvName);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
     }
@@ -37,8 +44,13 @@ public class MainActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        //TODO check login
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, R.string.login_expired, Toast.LENGTH_SHORT).show();
+            Utils.startIntent(MainActivity.this, LoginActivity.class);
+            finish();
+        } else {
+            mTextView.setText(mAuth.getCurrentUser().getDisplayName() + " && " + mAuth.getCurrentUser().getEmail());
+        }
     }
 
     @Override
@@ -50,9 +62,26 @@ public class MainActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            signOutUser();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void signOutUser() {
+        //sign out user
+        SharedPreference sharedPreference = getSharedPreference();
+        if (sharedPreference != null) {
+            sharedPreference.clearLogin();
+        }
+        FirebaseAuth.getInstance().signOut();
+        //start again the Login Activity
+        Utils.startIntent(MainActivity.this,LoginActivity.class);
+        finish();
+        //sign out from google
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder().build();
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(MainActivity.this, signInOptions);
+        googleSignInClient.signOut();
     }
 }

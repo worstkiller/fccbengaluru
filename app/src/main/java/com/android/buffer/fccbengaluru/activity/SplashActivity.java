@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 import com.android.buffer.fccbengaluru.util.Utils;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by incred on 03/12/17.
@@ -14,20 +15,16 @@ import com.android.buffer.fccbengaluru.util.Utils;
 
 public class SplashActivity extends BaseActivity {
 
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
-
-    private SharedPreference mSharedPreference;
-
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        mSharedPreference = getSharedPreference();
+        int SPLASH_DISPLAY_LENGTH = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //perform login validation and decide user navigation flow
-                if (mSharedPreference.isLoggedIn()) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     Utils.startIntent(SplashActivity.this, MainActivity.class);
                 } else {
                     Utils.startIntent(SplashActivity.this, LoginActivity.class);

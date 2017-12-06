@@ -31,4 +31,9 @@ public class SharedPreference {
         //returning the logged in flag
         return mSharedPreferences.getBoolean(IsLogin,false);
     }
+
+    public void clearLogin(){
+        //clear the login details
+        mSharedPreferences.edit().clear().apply();;
+    }
 }
