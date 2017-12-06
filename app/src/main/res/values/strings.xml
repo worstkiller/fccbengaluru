@@ -10,5 +10,9 @@
     <string name="splash_signup_text">Don\'t have an account? Signup</string>
     <string name="splash_error_email">Please enter a valid email</string>
     <string name="splash_error_password">Please enter a password of length 8 or more</string>
+    <string name="signup_email">Signup with email</string>
+    <string name="signup_google">Signup with Google</string>
+    <string name="signup_facebook">Signup with Facebook</string>
+    <string name="signup_already_signin">Already have an account? Signin</string>
 
 </resources>
