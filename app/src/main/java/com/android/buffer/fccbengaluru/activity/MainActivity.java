@@ -1,7 +1,6 @@
 package com.android.buffer.fccbengaluru.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,8 +13,6 @@ import com.android.buffer.fccbengaluru.util.Utils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends BaseActivity {
@@ -65,8 +62,17 @@ public class MainActivity extends BaseActivity {
             signOutUser();
             return true;
         }
+        if (id == R.id.action_admin) {
+            openAdminPanel();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openAdminPanel() {
+        //here open the admin panel
+        Utils.startIntent(MainActivity.this, EventEntryActivity.class);
     }
 
     private void signOutUser() {
@@ -77,7 +83,7 @@ public class MainActivity extends BaseActivity {
         }
         FirebaseAuth.getInstance().signOut();
         //start again the Login Activity
-        Utils.startIntent(MainActivity.this,LoginActivity.class);
+        Utils.startIntent(MainActivity.this, LoginActivity.class);
         finish();
         //sign out from google
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder().build();

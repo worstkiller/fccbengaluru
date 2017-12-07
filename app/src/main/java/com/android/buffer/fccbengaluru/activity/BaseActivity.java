@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -66,5 +67,12 @@ public class BaseActivity extends AppCompatActivity {
         if (mProgressDialog != null) {
             mProgressDialog.hide();
         }
+    }
+
+    /*
+    shows a snackbar
+     */
+    public void showSnackBar(String msg){
+        Snackbar.make(getCurrentFocus(),msg,Snackbar.LENGTH_SHORT).show();
     }
 }

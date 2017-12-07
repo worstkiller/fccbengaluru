@@ -28,5 +28,15 @@
     <string name="facebook_app_id">1993507337537188</string>
     <string name="fb_login_protocol_scheme">fb1993507337537188</string>
     <string name="menu_sign_out">Sign out</string>
+    <string name="events_details_title">Enter Events details</string>
+    <string name="enter_title_name">Enter title name</string>
+    <string name="event_date_dd_mm_yyyy">Enter event date in dd/mm/yyyy</string>
+    <string name="event_pin_code">Enter pin code</string>
+    <string name="event_address">Enter address</string>
+    <string name="eevent_details">Enter short event details</string>
+    <string name="event_image_url">Enter image url</string>
+    <string name="button_submit">Submit</string>
+    <string name="error_input_common">Please enter a valid input</string>
+    <string name="menu_admin_panel">Admin Panel</string>
 
 </resources>

@@ -21,6 +21,7 @@
         <item name="android:color">@color/blackColor</item>
         <item name="android:background">@drawable/edit_text_background</item>
         <item name="android:paddingTop">@dimen/margin_8</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:paddingBottom">@dimen/margin_8</item>
     </style>
 
@@ -28,6 +29,7 @@
         <item name="android:textColor">@color/whiteColor</item>
         <item name="android:textColorHint">@color/colorAccent</item>
         <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:paddingTop">@dimen/margin_8</item>
         <item name="android:paddingBottom">@dimen/margin_8</item>
     </style>
