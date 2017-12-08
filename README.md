@@ -15,6 +15,11 @@ Fire code camp hackathon challenge for bengaluru group.
   - Events can be added from app hidden in demo
   - 
 
+## Apk
+Please find the apk in apk/ of project root.
+## Screenshot
+Please find the screenshots in the root project screenshot/
+
 ### Installation
 
 clone the repository and replace the google_service.json in app/ with yours.
