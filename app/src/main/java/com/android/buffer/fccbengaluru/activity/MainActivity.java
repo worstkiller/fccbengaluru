@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
         //setting tab layout with viewpager
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,getSupportFragmentManager());
         mVpMain.setAdapter(viewPagerAdapter);
+        mVpMain.setOffscreenPageLimit(2);
         mTabMain.setupWithViewPager(mVpMain);
         viewPagerAdapter.setIcons(mTabMain);
     }
@@ -87,10 +88,6 @@ public class MainActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             signOutUser();
-            return true;
-        }
-        if (id == R.id.action_admin) {
-            openAdminPanel();
             return true;
         }
 

@@ -1,6 +1,7 @@
 package com.android.buffer.fccbengaluru;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 import com.crashlytics.android.Crashlytics;
@@ -26,6 +27,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         Fabric.with(this, new Crashlytics());
         appController = this;
     }
