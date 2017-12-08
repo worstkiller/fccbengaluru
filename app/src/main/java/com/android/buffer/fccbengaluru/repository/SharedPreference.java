@@ -36,4 +36,5 @@ public class SharedPreference {
         //clear the login details
         mSharedPreferences.edit().clear().apply();;
     }
+
 }

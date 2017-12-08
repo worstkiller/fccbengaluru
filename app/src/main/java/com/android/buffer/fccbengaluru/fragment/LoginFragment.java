@@ -29,6 +29,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
@@ -175,10 +177,22 @@ public class LoginFragment extends BaseFragment {
                         if (task.isSuccessful()) {
                             updateUI(mFirebaseAuth.getCurrentUser());
                         } else {
-                            updateUI(null);
+                            showInfoToUser(task);
                         }
                     }
                 });
+    }
+
+    private void showInfoToUser(Task<AuthResult> task) {
+        //here manage the exceptions and show relevant information to user
+        hideProgressDialog();
+        if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+            showSnackBar(getString(R.string.user_not_found_msg));
+        } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+            showSnackBar(getString(R.string.wrong_password_msg));
+        } else {
+            showSnackBar(getString(R.string.error_common));
+        }
     }
 
     private void updateUI(final FirebaseUser user) {

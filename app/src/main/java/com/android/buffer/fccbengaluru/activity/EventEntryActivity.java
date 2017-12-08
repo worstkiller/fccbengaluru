@@ -37,6 +37,10 @@ public class EventEntryActivity extends BaseActivity {
     @BindView(R.id.btnContinue)
     Button mBtnContinue;
     DatabaseReference mFirebaseDatabase;
+    @BindView(R.id.etEventStartTime)
+    EditText mEtEventStartTime;
+    @BindView(R.id.etEventWebsite)
+    EditText mEtWebsite;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -66,12 +70,25 @@ public class EventEntryActivity extends BaseActivity {
                             hideProgressDialog();
                             if (databaseError == null) {
                                 showSnackBar("Data inserted successfully");
+                                clearFields();
                             } else {
                                 showSnackBar(getString(R.string.error_common));
                             }
                         }
                     });
         }
+    }
+
+    private void clearFields() {
+        //here clear the fields
+        mEtEventDate.getText().clear();
+        mEtWebsite.getText().clear();
+        mEtEventStartTime.getText().clear();
+        mEtEventTitle.getText().clear();
+        mEtEventDetails.getText().clear();
+        mEtEventAddress.getText().clear();
+        mEtEventImage.getText().clear();
+        mEtEventPinCode.getText().clear();
     }
 
     private EventEntryModel getEventEntryModel() {
@@ -83,6 +100,8 @@ public class EventEntryActivity extends BaseActivity {
         eventEntryModel.setImageUrl(mEtEventImage.getText().toString());
         eventEntryModel.setPinCode(mEtEventPinCode.getText().toString());
         eventEntryModel.setShortDetails(mEtEventDetails.getText().toString());
+        eventEntryModel.setStartTime(mEtEventStartTime.getText().toString());
+        eventEntryModel.setWebsite(mEtWebsite.getText().toString());
         return eventEntryModel;
     }
 
@@ -90,26 +109,27 @@ public class EventEntryActivity extends BaseActivity {
         //validate the user input here
         if (mEtEventTitle.length() <= 0) {
             showSnackBar(getString(R.string.error_input_common));
+            mEtEventTitle.requestFocus();
             return false;
         }
         if (mEtEventDate.length() <= 0) {
             showSnackBar(getString(R.string.error_input_common));
-            return false;
-        }
-        if (mEtEventPinCode.length() < 6) {
-            showSnackBar(getString(R.string.error_input_common));
-            return false;
-        }
-        if (mEtEventAddress.length() <= 0) {
-            showSnackBar(getString(R.string.error_input_common));
+            mEtEventDate.requestFocus();
             return false;
         }
         if (mEtEventDetails.length() <= 0) {
             showSnackBar(getString(R.string.error_input_common));
+            mEtEventDetails.requestFocus();
             return false;
         }
-        if (mEtEventImage.length() <= 0) {
+        if (mEtEventStartTime.length() <= 0) {
             showSnackBar(getString(R.string.error_input_common));
+            mEtEventStartTime.requestFocus();
+            return false;
+        }
+        if (mEtWebsite.length() <= 0) {
+            showSnackBar(getString(R.string.error_input_common));
+            mEtWebsite.requestFocus();
             return false;
         }
         return true;

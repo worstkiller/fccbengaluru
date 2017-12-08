@@ -1,9 +1,9 @@
 package com.android.buffer.fccbengaluru.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.android.buffer.fccbengaluru.activity.BaseActivity;

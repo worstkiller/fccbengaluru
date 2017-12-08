@@ -38,5 +38,19 @@
     <string name="button_submit">Submit</string>
     <string name="error_input_common">Please enter a valid input</string>
     <string name="menu_admin_panel">Admin Panel</string>
+    <string name="dialog_title_verification">Email Verification</string>
+    <string name="dialog_code_failed">Your code does not matched</string>
+    <string name="email_verification_sent">Please check you inbox for account verification</string>
+    <string name="user_not_found_msg">Sorry this email doesn\'t exist, please signup</string>
+    <string name="wrong_password_msg">Email or password provided does not match</string>
+    <string name="user_already_exist_msg">You already have an account Try signing in</string>
+    <string name="event_start_time">Enter start time in 24 hour format ex 10 PM</string>
+    <string name="event_enter_website">Enter website</string>
+    <string name="error_connect_to_server">Opps could not connect to server</string>
+    <string name="button_try_again">Try Again</string>
+    <string name="button_add_to_calendar">Add to calender</string>
+    <string name="button_open_web">Website</string>
+
+    <string name="sample_string">"As a mob/web developer and tech enthusiast what you can build which will solve real-time existing problems in an efficient way ? or let's discuss the problems that you think can be solved by developing mob/web apps"</string>
 
 </resources>

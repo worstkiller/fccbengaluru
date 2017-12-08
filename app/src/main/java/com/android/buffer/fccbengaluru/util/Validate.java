@@ -32,7 +32,7 @@ public class Validate {
         if (editText.length() < 8) {
             return false;
         } else {
-            if (editText.getText().toString().trim().length() > 8) {
+            if (editText.getText().toString().trim().length() < 8) {
                 return false;
             }
             return true;

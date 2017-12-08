@@ -7,10 +7,12 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.activity.MainActivity;
@@ -21,6 +23,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
@@ -130,14 +134,27 @@ public class EmailSignupFragment extends BaseFragment {
                     public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (isAdded()) {
                             if (task.isSuccessful()) {
-                                updateUI(mAuth.getCurrentUser());
+                                sendEmailVerification();
                             } else {
-                                updateUI(null);
+                                showInfoToUser(task);
                             }
                         }
                     }
                 });
     }
+
+    private void showInfoToUser(Task<AuthResult> task) {
+        //here manage the exceptions and show relevant information to user
+        hideProgressDialog();
+        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+            showSnackBar(getString(R.string.user_already_exist_msg));
+        } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+            showSnackBar(task.getException().getMessage());
+        } else {
+            showSnackBar(getString(R.string.error_common));
+        }
+    }
+
 
     private void updateUI(final FirebaseUser user) {
         //here update the ui and store the info
@@ -151,6 +168,29 @@ public class EmailSignupFragment extends BaseFragment {
             }
         } else {
             showSnackBar(getString(R.string.error_common));
+        }
+    }
+
+    private void sendEmailVerification() {
+        //send email verification
+        try {
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Email sent.");
+                                Toast.makeText(getContext(), getString(R.string.email_verification_sent), Toast.LENGTH_LONG).show();
+                                updateUI(mAuth.getCurrentUser());
+                            } else {
+                                updateUI(mAuth.getCurrentUser());
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

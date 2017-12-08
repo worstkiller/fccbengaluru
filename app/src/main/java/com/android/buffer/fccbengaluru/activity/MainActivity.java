@@ -1,13 +1,18 @@
 package com.android.buffer.fccbengaluru.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
+import com.android.buffer.fccbengaluru.adapter.ViewPagerAdapter;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 import com.android.buffer.fccbengaluru.util.Utils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -15,19 +20,43 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends BaseActivity {
 
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.tabMain)
+    TabLayout mTabMain;
+    @BindView(R.id.vpMain)
+    ViewPager mVpMain;
+    @BindView(R.id.btTryAgain)
+    AppCompatButton mBtTryAgain;
+    @BindView(R.id.llErrorConnectivity)
+    LinearLayout mLlErrorConnectivity;
+    @BindView(R.id.flContainerMain)
+    RelativeLayout mFlContainerMain;
+
     private FirebaseAuth mAuth;
-    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTextView = findViewById(R.id.tvName);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
         mAuth = FirebaseAuth.getInstance();
+        setViewPagerWithTab();
+    }
+
+    private void setViewPagerWithTab() {
+        //setting tab layout with viewpager
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,getSupportFragmentManager());
+        mVpMain.setAdapter(viewPagerAdapter);
+        mTabMain.setupWithViewPager(mVpMain);
+        viewPagerAdapter.setIcons(mTabMain);
     }
 
     @Override
@@ -45,8 +74,6 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, R.string.login_expired, Toast.LENGTH_SHORT).show();
             Utils.startIntent(MainActivity.this, LoginActivity.class);
             finish();
-        } else {
-            mTextView.setText(mAuth.getCurrentUser().getDisplayName() + " && " + mAuth.getCurrentUser().getEmail());
         }
     }
 
@@ -89,5 +116,9 @@ public class MainActivity extends BaseActivity {
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder().build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(MainActivity.this, signInOptions);
         googleSignInClient.signOut();
+    }
+
+    @OnClick(R.id.btTryAgain)
+    public void onViewClicked() {
     }
 }

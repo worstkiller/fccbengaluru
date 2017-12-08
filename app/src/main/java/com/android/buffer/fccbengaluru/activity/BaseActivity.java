@@ -1,10 +1,10 @@
 package com.android.buffer.fccbengaluru.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -35,7 +35,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param fragment
      */
     public void addFragment(Fragment fragment, boolean backStackEnabled) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (backStackEnabled) {
             fragmentTransaction.replace(R.id.flContainerLogin, fragment).addToBackStack(fragment.getClass().getCanonicalName());
         } else {
@@ -72,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
     /*
     shows a snackbar
      */
-    public void showSnackBar(String msg){
-        Snackbar.make(getCurrentFocus(),msg,Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(String msg) {
+        Snackbar.make(getCurrentFocus(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

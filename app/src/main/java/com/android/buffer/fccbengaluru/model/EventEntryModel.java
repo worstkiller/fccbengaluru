@@ -11,6 +11,24 @@ public class EventEntryModel {
     private String address;
     private String shortDetails;
     private String imageUrl;
+    private String startTime;
+    private String website;
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(final String website) {
+        this.website = website;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(final String startTime) {
+        this.startTime = startTime;
+    }
 
     public String getTitle() {
         return title;
