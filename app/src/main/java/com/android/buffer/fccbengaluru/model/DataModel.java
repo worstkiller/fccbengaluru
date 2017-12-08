@@ -14,6 +14,17 @@ public class DataModel {
     @SerializedName("updated_time")
     @Expose
     private String updatedTime;
+    @SerializedName("story")
+    @Expose
+    private String story;
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(final String story) {
+        this.story = story;
+    }
 
     public String getMessage() {
         return message;

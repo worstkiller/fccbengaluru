@@ -1,7 +1,9 @@
 package com.android.buffer.fccbengaluru.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         DataModel feedModel = mDataModels.get(position);
-        holder.tvFeedMessage.setText(feedModel.getMessage());
+        if (!TextUtils.isEmpty(feedModel.getMessage())) {
+            holder.tvFeedMessage.setText(feedModel.getMessage());
+        } else if (!TextUtils.isEmpty(feedModel.getStory())) {
+            holder.tvFeedMessage.setText(feedModel.getStory());
+        } else {
+            holder.mCardView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -51,11 +59,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvFeedMessage;
         private ImageView mImageView;
+        private CardView mCardView;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             tvFeedMessage = itemView.findViewById(R.id.tvFeedMessage);
             mImageView = itemView.findViewById(R.id.ivFeedCover);
+            mCardView = itemView.findViewById(R.id.cvFeed);
+            itemView.setOnClickListener(this);
         }
 
         @Override
