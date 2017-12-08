@@ -25,7 +25,7 @@
     <string name="last_login_info">Last login is not performed successfully</string>
 
     <!--facebook id-->
-    <string name="facebook_app_id">1993507337537188</string>
+    <string name="facebook_app_id">replace with yours</string>
     <string name="fb_login_protocol_scheme">fb1993507337537188</string>
     <string name="menu_sign_out">Sign out</string>
     <string name="events_details_title">Enter Events details</string>
