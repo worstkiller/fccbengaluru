@@ -55,4 +55,5 @@
     <string name="dialog_google_play_services_title">Google Play Service</string>
     <string name="dialog_google_play_services_missing">Sorry, we have detected that your device does not support Google play services.</string>
 
+    <string name="default_notification_channel_id">com.android.buffer.fccbengaluru</string>
 </resources>
