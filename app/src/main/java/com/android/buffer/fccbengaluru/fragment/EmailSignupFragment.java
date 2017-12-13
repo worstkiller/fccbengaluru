@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.activity.MainActivity;
+import com.android.buffer.fccbengaluru.model.UserModel;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 import com.android.buffer.fccbengaluru.util.Utils;
 import com.android.buffer.fccbengaluru.util.Validate;
@@ -26,11 +27,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.android.buffer.fccbengaluru.util.Constants.DATABASE_REFERENCE_USER;
+import static com.android.buffer.fccbengaluru.util.Constants.USER_NORMAL;
 
 /**
  * Created by incred on 6/12/17.
@@ -52,6 +60,7 @@ public class EmailSignupFragment extends BaseFragment {
     AppCompatButton mBtEmailSignup;
     Unbinder unbinder;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseReference;
 
     /**
      * returns a new @EmailSignup fragment instance
@@ -66,6 +75,7 @@ public class EmailSignupFragment extends BaseFragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference(DATABASE_REFERENCE_USER);
     }
 
     @Nullable
@@ -175,7 +185,7 @@ public class EmailSignupFragment extends BaseFragment {
         //send email verification
         try {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = firebaseAuth.getCurrentUser();
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
             user.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -183,6 +193,7 @@ public class EmailSignupFragment extends BaseFragment {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "Email sent.");
                                 Toast.makeText(getContext(), getString(R.string.email_verification_sent), Toast.LENGTH_LONG).show();
+                                insertUser(mAuth.getCurrentUser());
                                 updateUI(mAuth.getCurrentUser());
                             } else {
                                 updateUI(mAuth.getCurrentUser());
@@ -207,5 +218,32 @@ public class EmailSignupFragment extends BaseFragment {
             return false;
         }
         return true;
+    }
+
+    private void insertUser(final FirebaseUser currentUser) {
+        //here insert a user entry into database for future reference
+        mDatabaseReference
+                .push()
+                .setValue(getUserModel(currentUser), new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(final DatabaseError databaseError, final DatabaseReference databaseReference) {
+                        //handle the response here
+                        if (databaseError == null) {
+                            Log.d(TAG, "user is inserted into DB");
+                        } else {
+                            Log.d(TAG, "user is not inserted into DB");
+                        }
+                    }
+                });
+    }
+
+    private UserModel getUserModel(final FirebaseUser currentUser) {
+        //construct a user model and return
+        UserModel userModel = new UserModel();
+        userModel.setEmail(currentUser.getEmail());
+        userModel.setName(currentUser.getDisplayName());
+        userModel.setUserType(USER_NORMAL);
+        userModel.setFirebaseToken(FirebaseInstanceId.getInstance().getToken());
+        return userModel;
     }
 }

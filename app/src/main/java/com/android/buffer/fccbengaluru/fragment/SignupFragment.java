@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.activity.MainActivity;
+import com.android.buffer.fccbengaluru.model.UserModel;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
 import com.android.buffer.fccbengaluru.util.Constants;
 import com.android.buffer.fccbengaluru.util.Utils;
@@ -41,6 +42,10 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 
@@ -48,6 +53,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.android.buffer.fccbengaluru.util.Constants.DATABASE_REFERENCE_USER;
+import static com.android.buffer.fccbengaluru.util.Constants.USER_NORMAL;
 
 /**
  * Created by incred on 6/12/17.
@@ -69,6 +77,7 @@ public class SignupFragment extends BaseFragment {
     private CallbackManager mCallbackManager;
     private FirebaseAuth mFirebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private DatabaseReference mDatabaseReference;
 
     /**
      * returns a signup instance
@@ -83,6 +92,7 @@ public class SignupFragment extends BaseFragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference(DATABASE_REFERENCE_USER);
     }
 
     @Nullable
@@ -147,6 +157,7 @@ public class SignupFragment extends BaseFragment {
                     @Override
                     public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (task != null) {
+                            insertUser(mFirebaseAuth.getCurrentUser());
                             updateUI(mFirebaseAuth.getCurrentUser());
                         } else {
                             updateUI(null);
@@ -269,6 +280,7 @@ public class SignupFragment extends BaseFragment {
             public void onComplete(@NonNull final Task<AuthResult> task) {
                 if (task != null) {
                     Log.d(TAG, "signInWithCredential:success");
+                    insertUser(mFirebaseAuth.getCurrentUser());
                     updateUI(mFirebaseAuth.getCurrentUser());
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -277,5 +289,33 @@ public class SignupFragment extends BaseFragment {
             }
         });
     }
+
+    private void insertUser(final FirebaseUser currentUser) {
+        //here insert a user entry into database for future reference
+        mDatabaseReference
+                .push()
+                .setValue(getUserModel(currentUser), new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(final DatabaseError databaseError, final DatabaseReference databaseReference) {
+                        //handle the response here
+                        if (databaseError == null) {
+                            Log.d(TAG, "user is inserted into DB");
+                        } else {
+                            Log.d(TAG, "user is not inserted into DB");
+                        }
+                    }
+                });
+    }
+
+    private UserModel getUserModel(final FirebaseUser currentUser) {
+        //construct a user model and return
+        UserModel userModel = new UserModel();
+        userModel.setEmail(currentUser.getEmail());
+        userModel.setName(currentUser.getDisplayName());
+        userModel.setUserType(USER_NORMAL);
+        userModel.setFirebaseToken(FirebaseInstanceId.getInstance().getToken());
+        return userModel;
+    }
+
 
 }
