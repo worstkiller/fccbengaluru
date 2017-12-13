@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -53,7 +54,7 @@ public class MainActivity extends BaseActivity {
 
     private void setViewPagerWithTab() {
         //setting tab layout with viewpager
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this,getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, getSupportFragmentManager());
         mVpMain.setAdapter(viewPagerAdapter);
         mVpMain.setOffscreenPageLimit(2);
         mTabMain.setupWithViewPager(mVpMain);
@@ -75,6 +76,23 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, R.string.login_expired, Toast.LENGTH_SHORT).show();
             Utils.startIntent(MainActivity.this, LoginActivity.class);
             finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        manageConnection();
+    }
+
+    private void manageConnection() {
+        //this manages the connections
+        if (!Utils.isConnectedToInternet(this)) {
+            mLlErrorConnectivity.setVisibility(View.VISIBLE);
+        } else {
+            if (mLlErrorConnectivity.getVisibility() == View.VISIBLE) {
+                mLlErrorConnectivity.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -117,5 +135,6 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btTryAgain)
     public void onViewClicked() {
+        setViewPagerWithTab();
     }
 }

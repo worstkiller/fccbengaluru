@@ -1,13 +1,18 @@
 package com.android.buffer.fccbengaluru.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 
 import com.android.buffer.fccbengaluru.model.EventEntryModel;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,6 +67,7 @@ public class Utils {
 
     /**
      * set the event in android calendar
+     *
      * @param context
      * @param eventEntryModel
      */
@@ -95,16 +101,64 @@ public class Utils {
 
     /**
      * returns date in month date and year JAN 09 2017
+     *
      * @param date
      * @return
      * @throws ParseException
      */
     public static String getParsedDateFormat(String date) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
-        SimpleDateFormat simpleDateOutput = new SimpleDateFormat("MMM d yyyy",Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        SimpleDateFormat simpleDateOutput = new SimpleDateFormat("MMM d yyyy", Locale.getDefault());
         Date date1 = simpleDateFormat.parse(date);
         String dateFormat = simpleDateOutput.format(date1);
         return dateFormat;
     }
 
+    /**
+     * returns if the device is connected or connecting
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isConnectedToInternet(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean result = networkInfo != null && networkInfo.isConnectedOrConnecting();
+        return result;
+    }
+
+    /**
+     * return @Integer value for each status, check </br> on calling side to match and take action
+     *
+     * @param context
+     * @return
+     */
+    public static int checkGooglePlayServices(Context context) {
+        GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
+        int code = availability.isGooglePlayServicesAvailable(context);
+        if (code == ConnectionResult.SUCCESS) {
+            //google api is supported
+            return ConnectionResult.SUCCESS;
+        } else {
+            if (availability.isUserResolvableError(code)) {
+                //out of date google play services
+                return ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED;
+            } else {
+                //device is not supported
+                return ConnectionResult.SERVICE_MISSING;
+            }
+        }
+    }
+
+    /**
+     * shows dialog for google play services enable when context provided
+     *
+     * @param context
+     */
+    public static void showGooglePlayUpdateDialog(Context context, int requestCode) {
+        GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
+        int code = availability.isGooglePlayServicesAvailable(context);
+        availability.showErrorDialogFragment((Activity) context, code, requestCode);
+    }
 }

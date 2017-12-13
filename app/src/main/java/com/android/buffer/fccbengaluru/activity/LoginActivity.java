@@ -1,12 +1,17 @@
 package com.android.buffer.fccbengaluru.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 
+import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.fragment.EmailSignupFragment;
 import com.android.buffer.fccbengaluru.fragment.LoginFragment;
 import com.android.buffer.fccbengaluru.fragment.SignupFragment;
+import com.android.buffer.fccbengaluru.util.Utils;
+import com.google.android.gms.common.ConnectionResult;
 
 import static com.android.buffer.fccbengaluru.util.Constants.FRAGMENT_EMAIL_SIGNUP;
 import static com.android.buffer.fccbengaluru.util.Constants.FRAGMENT_LOGIN;
@@ -17,6 +22,8 @@ import static com.android.buffer.fccbengaluru.util.Constants.FRAGMENT_SIGN_UP;
  */
 
 public class LoginActivity extends BaseActivity {
+
+    private int REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -73,5 +80,44 @@ public class LoginActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkGooglePlayServicesAvailability();
+    }
+
+    private void checkGooglePlayServicesAvailability() {
+        //check if the google play serevices are available or not
+        switch (Utils.checkGooglePlayServices(this)) {
+            case ConnectionResult.SUCCESS:
+                //success no action required
+                break;
+            case ConnectionResult.SERVICE_MISSING:
+                //device not supported
+                showGooglePlayMissingDialog();
+                break;
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                //update the google play services
+                Utils.showGooglePlayUpdateDialog(this, REQUEST_CODE);
+                break;
+        }
+    }
+
+    private void showGooglePlayMissingDialog() {
+        //create a dialog and show to the user about missing google play services
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_google_play_services_title)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialogInterface, final int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                })
+                .setMessage(R.string.dialog_google_play_services_missing)
+                .setCancelable(false);
+        builder.create().show();
     }
 }
