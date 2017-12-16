@@ -65,7 +65,7 @@ public class EventFragment extends BaseFragment {
         //here fetch the data from the firebase
         showProgressDialog();
         DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_REFERENCE_EVENT);
-        firebaseDatabase.addValueEventListener(new ValueEventListener() {
+        firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 //get the data and parse into some pojo

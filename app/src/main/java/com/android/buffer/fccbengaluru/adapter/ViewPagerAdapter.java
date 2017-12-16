@@ -45,7 +45,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     public View getTabView(int position) {
-        // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView
+        // Given you have a custom layout in `res/layout/item_row_tab.xml` with a TextView and ImageView
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_row_tab, null);
         TextView tv = (TextView) v.findViewById(R.id.tvTabTitle);
         tv.setText(titles[position]);

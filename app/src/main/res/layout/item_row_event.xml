@@ -14,8 +14,7 @@
         <FrameLayout
             android:id="@+id/flMainCover"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_row_image_height"
-            android:foreground="@color/imageOverlay">
+            android:layout_height="@dimen/item_row_image_height">
 
             <ImageView
                 android:id="@+id/ivRowMainCover"
@@ -28,7 +27,7 @@
 
         <TextView
             android:id="@+id/tvRowMainDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/flMainCover"
             android:padding="@dimen/margin_8"

@@ -1,10 +1,12 @@
 package com.android.buffer.fccbengaluru.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,12 +16,20 @@ import android.widget.Toast;
 
 import com.android.buffer.fccbengaluru.R;
 import com.android.buffer.fccbengaluru.adapter.ViewPagerAdapter;
+import com.android.buffer.fccbengaluru.model.UserModel;
 import com.android.buffer.fccbengaluru.repository.SharedPreference;
+import com.android.buffer.fccbengaluru.util.Constants;
 import com.android.buffer.fccbengaluru.util.Utils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,6 +37,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
+    private static final String TAG = MainActivity.class.getCanonicalName();
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.tabMain)
@@ -40,7 +51,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.flContainerMain)
     RelativeLayout mFlContainerMain;
 
+    private Boolean isUserTypeAdmin = false;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         mAuth = FirebaseAuth.getInstance();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_REFERENCE_USER);
         setViewPagerWithTab();
     }
 
@@ -83,15 +97,53 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         manageConnection();
+        checkUserType();
+    }
+
+    private void checkUserType() {
+        //checks for user type in firebase database
+        final String email = mAuth.getCurrentUser().getEmail();
+        Query query = mDatabaseReference.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot != null) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            UserModel userModel = snapshot.getValue(UserModel.class);
+                            if (userModel.getEmail() == null) {
+                                return;
+                            }
+                            if (userModel.getEmail().equals(email) && userModel.getUserType() == 0) {
+                                Log.d(TAG, userModel.getEmail());
+                                isUserTypeAdmin = true;
+                                invalidateOptionsMenu();
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "user check failed");
+                    }
+                } catch (NullPointerException exp) {
+                    exp.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.d(TAG, "user check failed");
+            }
+        });
     }
 
     private void manageConnection() {
         //this manages the connections
         if (!Utils.isConnectedToInternet(this)) {
             mLlErrorConnectivity.setVisibility(View.VISIBLE);
+            mTabMain.setVisibility(View.GONE);
         } else {
             if (mLlErrorConnectivity.getVisibility() == View.VISIBLE) {
                 mLlErrorConnectivity.setVisibility(View.GONE);
+                mTabMain.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -104,12 +156,24 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_signout) {
             signOutUser();
+            return true;
+        }
+        if (id == R.id.action_admin) {
+            openAdminPanel();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        if (isUserTypeAdmin) {
+            menu.findItem(R.id.action_admin).setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void openAdminPanel() {
@@ -135,6 +199,10 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btTryAgain)
     public void onViewClicked() {
-        setViewPagerWithTab();
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 }

@@ -2,7 +2,9 @@ package com.android.buffer.fccbengaluru.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -48,6 +50,17 @@ public class AboutFragment extends BaseFragment {
         WebSettings webSettings = mWvAbout.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWvAbout.setWebViewClient(new WebViewClient());
+        mWvAbout.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK
+                        && event.getAction() == MotionEvent.ACTION_UP
+                        && mWvAbout.canGoBack()) {
+                    mWvAbout.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

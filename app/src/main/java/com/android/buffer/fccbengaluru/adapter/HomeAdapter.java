@@ -58,13 +58,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvFeedMessage;
-        private ImageView mImageView;
         private CardView mCardView;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             tvFeedMessage = itemView.findViewById(R.id.tvFeedMessage);
-            mImageView = itemView.findViewById(R.id.ivFeedCover);
             mCardView = itemView.findViewById(R.id.cvFeed);
             itemView.setOnClickListener(this);
         }
