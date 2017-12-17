@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,6 +119,7 @@ public class MainActivity extends BaseActivity {
                                 Log.d(TAG, userModel.getEmail());
                                 isUserTypeAdmin = true;
                                 invalidateOptionsMenu();
+                                FirebaseMessaging.getInstance().subscribeToTopic(Constants.USER_ADMIN_GROUP);
                             }
                         }
                     } else {

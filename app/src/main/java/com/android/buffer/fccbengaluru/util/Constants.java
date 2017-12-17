@@ -20,4 +20,7 @@ public class Constants {
     public static final String FEED_URL = "https://www.facebook.com/groups/free.code.camp.bengaluru/";
     public static final int USER_ADMIN = 0;
     public static final int USER_NORMAL = 1;
+    public static final String USER_NORMAL_GROUP = "userGroup";
+    public static final String USER_ADMIN_GROUP = "adminGroup";
+
 }
